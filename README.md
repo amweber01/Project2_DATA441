@@ -94,6 +94,7 @@ Import statements:
 ```Python
 from sklearn.model_selection import train_test_split as tts, KFold
 from sklearn.metrics import mean_squared_error as mse
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
 ```
 
@@ -109,6 +110,7 @@ mse_lwr = []
 mse_rf = []
 kf = KFold(n_splits=10,shuffle=True,random_state=1234)
 model_rf = RandomForestRegressor(n_estimators=200,max_depth=5)
+scale = StandardScaler()
 
 for idxtrain, idxtest in kf.split(x):
   xtrain = x[idxtrain]
@@ -118,7 +120,46 @@ for idxtrain, idxtest in kf.split(x):
   xtrain = scale.fit_transform(xtrain)
   xtest = scale.transform(xtest)
 
-  yhat_lw = lw_ag_md(xtrain, ytrain, xtest, f=1/3, iter=1, intercept=True)
+  yhat_lw = lw_ag_md(xtrain, ytrain, xtest, f=1/6, iter=2, intercept=True)
+  
+  model_rf.fit(xtrain,ytrain)
+  yhat_rf = model_rf.predict(xtest)
+
+  mse_lwr.append(mse(ytest,yhat_lw))
+  mse_rf.append(mse(ytest,yhat_rf))
+print('The Cross-validated Mean Squared Error for Locally Weighted Regression is : '+str(np.mean(mse_lwr)))
+print('The Cross-validated Mean Squared Error for Random Forest is : '+str(np.mean(mse_rf)))
+```
+Running this code yields the approximate results:
+
+The Cross-validated Mean Squared Error for Locally Weighted Regression is : 24.45322253639544
+The Cross-validated Mean Squared Error for Random Forest is : 17.113401560521112
+
+Thus, the locally weighted regression has a slightly higher mse than random forest, but is overall close. The mse can be improved by fine-tuning the hyperparameters (f and iter).
+
+### Concrete data
+
+```Python
+data2 = pd.read_csv('drive/MyDrive/DATA441/data/concrete.csv')
+
+x = data2.loc[:,'cement':'age'].values
+y = data2['strength'].values
+
+mse_lwr = []
+mse_rf = []
+kf = KFold(n_splits=10,shuffle=True,random_state=1234)
+model_rf = RandomForestRegressor(n_estimators=200,max_depth=5)
+scale = StandardScaler()
+
+for idxtrain, idxtest in kf.split(x):
+  xtrain = x[idxtrain]
+  ytrain = y[idxtrain]
+  ytest = y[idxtest]
+  xtest = x[idxtest]
+  xtrain = scale.fit_transform(xtrain)
+  xtest = scale.transform(xtest)
+
+  yhat_lw = lw_ag_md(xtrain, ytrain, xtest, f=1/75, iter=2, intercept=True)
   
   model_rf.fit(xtrain,ytrain)
   yhat_rf = model_rf.predict(xtest)
@@ -129,4 +170,13 @@ print('The Cross-validated Mean Squared Error for Locally Weighted Regression is
 print('The Cross-validated Mean Squared Error for Random Forest is : '+str(np.mean(mse_rf)))
 ```
 
-### Concrete data
+Running this code yields the approximate results:
+
+The Cross-validated Mean Squared Error for Locally Weighted Regression is : 45.948580062873056
+The Cross-validated Mean Squared Error for Random Forest is : 45.4781508788599
+
+Here, the mses are higher than with the previous dataset, but the locally weighted regression method is much closer in mse to the random forest regressor.
+
+```Python
+
+```
