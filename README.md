@@ -135,7 +135,7 @@ Running this code yields the approximate results:
 The Cross-validated Mean Squared Error for Locally Weighted Regression is : 24.45322253639544 \
 The Cross-validated Mean Squared Error for Random Forest is : 17.113401560521112
 
-Thus, the locally weighted regression has a slightly higher mse than random forest, but is overall close. The mse can be improved by fine-tuning the hyperparameters (f and iter), which we do below using a grid search.
+Thus, the locally weighted regression has a slightly higher mse than random forest, but is overall close. The mse can be improved by fine-tuning the hyperparameters (f and iter), which we do in the Optimizing Hyperparameters section below by using a grid search.
 
 ### Concrete data
 
