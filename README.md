@@ -87,7 +87,7 @@ def lw_ag_md(x, y, xnew, f=2/3, iter=3, intercept=True):
 ```
 ## KFold Cross-Validations
 
-To test the above function, we'll run some KFold cross-validations with real data. With each of the two datasets below, we compare the mse of the Lowess functions with the mse of a random forest regressor for comparison.
+To test the above function, we'll run some KFold cross-validations with real data. With each of the two datasets below, we compute the mse of a random forest regressor to compare with the mse for Lowess.
 
 Import statements:
 
@@ -280,3 +280,5 @@ gs_lowess.best_params_
 ```
 
 From this grid search, we get that the best value for f is 1/3 and the best value for iter is 1. When we plug these values into the Scikit compliant function and run a cross-validation, we get an mse of 23.536855642155476, which is slightly better than the previous mse for this data.
+
+Unfortunately, because the grid search method is not highly efficient, it is impractical to use on the concrete dataset due to time constraints.
