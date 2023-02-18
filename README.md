@@ -87,7 +87,7 @@ def lw_ag_md(x, y, xnew, f=2/3, iter=3, intercept=True):
 ```
 ## KFold Cross-Validations
 
-To test the above function, we'll run some KFold cross-validations with real data.
+To test the above function, we'll run some KFold cross-validations with real data. With each of the two datasets below, we compare the mse of the Lowess functions with the mse of a random forest regressor for comparison.
 
 Import statements:
 
@@ -109,7 +109,6 @@ mse_lwr = []
 mse_rf = []
 kf = KFold(n_splits=10,shuffle=True,random_state=1234)
 model_rf = RandomForestRegressor(n_estimators=200,max_depth=5)
-# model_lw = lw_ag_md(f=1/3,iter=1,intercept=True) #(x, y, xnew, f=2/3, iter=3, intercept=True)
 
 for idxtrain, idxtest in kf.split(x):
   xtrain = x[idxtrain]
@@ -119,7 +118,7 @@ for idxtrain, idxtest in kf.split(x):
   xtrain = scale.fit_transform(xtrain)
   xtest = scale.transform(xtest)
 
-  yhat_lw = lw_ag_md(xtrain, ytrain, xtest, f=1/3,iter=1,intercept=True)
+  yhat_lw = lw_ag_md(xtrain, ytrain, xtest, f=1/3, iter=1, intercept=True)
   
   model_rf.fit(xtrain,ytrain)
   yhat_rf = model_rf.predict(xtest)
