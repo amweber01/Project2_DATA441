@@ -177,6 +177,78 @@ The Cross-validated Mean Squared Error for Random Forest is : 45.4781508788599
 
 Here, the mses are higher than with the previous dataset, but the locally weighted regression method is much closer in mse to the random forest regressor.
 
+## A Scikit Learn Compliant Function
+
+Next we will make a Lowess class that makes the function Scikit learn compliant. It is nice to be able to use the fit and predict methods.
+
+Additional import needed for this function:
+
+```Python
+from sklearn.utils.validation import check_is_fitted
+```
+
+Class definition:
+
+```Python
+class Lowess_AG_MD:
+    def __init__(self, f = 1/10, iter = 3, intercept=True):
+        self.f = f
+        self.iter = iter
+        self.intercept = intercept
+    
+    def fit(self, x, y):
+        f = self.f
+        iter = self.iter
+        self.xtrain_ = x
+        self.yhat_ = y
+
+    def predict(self, x_new):
+        check_is_fitted(self)
+        x = self.xtrain_
+        y = self.yhat_
+        f = self.f
+        iter = self.iter
+        intercept = self.intercept
+        return lw_ag_md(x, y, x_new, f, iter, intercept)
+
+    def get_params(self, deep=True):
+        return {"f": self.f, "iter": self.iter,"intercept":self.intercept}
+
+    def set_params(self, **parameters):
+        for parameter, value in parameters.items():
+            setattr(self, parameter, value)
+        return self
+```
+
+A KFold cross-validation can be run with this class. The code below is very similar to the cross-validations above with the non-Scikit compliant function.
+
+```Python
+mse_lwr = []
+mse_rf = []
+kf = KFold(n_splits=10,shuffle=True,random_state=1234)
+model_rf = RandomForestRegressor(n_estimators=200,max_depth=5)
+model_lw = Lowess_AG_MD(f=1/75,iter=2,intercept=True)
+
+for idxtrain, idxtest in kf.split(x):
+  xtrain = x[idxtrain]
+  ytrain = y[idxtrain]
+  ytest = y[idxtest]
+  xtest = x[idxtest]
+  xtrain = scale.fit_transform(xtrain)
+  xtest = scale.transform(xtest)
+
+  model_lw.fit(xtrain,ytrain)
+  yhat_lw = model_lw.predict(xtest)
+  
+  model_rf.fit(xtrain,ytrain)
+  yhat_rf = model_rf.predict(xtest)
+
+  mse_lwr.append(mse(ytest,yhat_lw))
+  mse_rf.append(mse(ytest,yhat_rf))
+print('The Cross-validated Mean Squared Error for Locally Weighted Regression is : '+str(np.mean(mse_lwr)))
+print('The Cross-validated Mean Squared Error for Random Forest is : '+str(np.mean(mse_rf)))
+```
+
 ```Python
 
 ```
