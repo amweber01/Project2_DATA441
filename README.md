@@ -279,7 +279,7 @@ gs_lowess.fit(x, y)
 gs_lowess.best_params_
 ```
 
-From this grid search, we get that the best value for f is 1/3 and the best value for iter is 1. When we plug these values into the Scikit compliant function and run a cross-validation, we get an mse of 23.536855642155476, which is slightly better than our previous attempt.
+From this grid search, we get that the best value for f is 1/3 and the best value for iter is 1. When we plug these values into the Scikit compliant function and run a cross-validation, we get an mse of 23.536855642155476, which is slightly better than the mse from above.
 
 ### Concrete data
 
