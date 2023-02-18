@@ -248,7 +248,57 @@ for idxtrain, idxtest in kf.split(x):
 print('The Cross-validated Mean Squared Error for Locally Weighted Regression is : '+str(np.mean(mse_lwr)))
 print('The Cross-validated Mean Squared Error for Random Forest is : '+str(np.mean(mse_rf)))
 ```
+## Optimizing Hyperparameters
+
+To get smaller mse values, we can run a grid search for optimized hyperparameters.
+
+Import statements:
 
 ```Python
-
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import GridSearchCV
 ```
+
+### Car data
+
+```Python
+x = data.loc[:,'CYL':'WGT'].values
+y = data['MPG'].values
+
+lwr_pipe = Pipeline([('zscores', StandardScaler()),
+                     ('lwr', Lowess_AG_MD())])
+
+params = [{'lwr__f': [1/i for i in range(3,15)],
+         'lwr__iter': [1,2,3,4]}]
+         
+gs_lowess = GridSearchCV(lwr_pipe,
+                      param_grid=params,
+                      scoring='neg_mean_squared_error',
+                      cv=5)
+gs_lowess.fit(x, y)
+gs_lowess.best_params_
+```
+
+From this grid search, we get that the best value for f is 1/3 and the best value for iter is 1. When we plug these values into the Scikit compliant function and run a cross-validation, we get an mse of 
+
+### Concrete data
+
+```Python
+x = data2.loc[:,'cement':'age'].values
+y = data2['strength'].values
+
+lwr_pipe = Pipeline([('zscores', StandardScaler()),
+                     ('lwr', Lowess_AG_MD())])
+
+params = [{'lwr__f': [1/i for i in range(50,90)],
+         'lwr__iter': [1,2,3,4]}]
+
+gs_lowess = GridSearchCV(lwr_pipe,
+                      param_grid=params,
+                      scoring='neg_mean_squared_error',
+                      cv=5)
+gs_lowess.fit(x, y)
+gs_lowess.best_params_
+```
+
+From this grid search, we get that the best value for f is 1/3 and the best value for iter is 1. When we plug these values into the Scikit compliant function and run a cross-validation, we get an mse of 
