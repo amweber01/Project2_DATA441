@@ -132,7 +132,7 @@ print('The Cross-validated Mean Squared Error for Random Forest is : '+str(np.me
 ```
 Running this code yields the approximate results:
 
-The Cross-validated Mean Squared Error for Locally Weighted Regression is : 24.45322253639544
+The Cross-validated Mean Squared Error for Locally Weighted Regression is : 24.45322253639544 \
 The Cross-validated Mean Squared Error for Random Forest is : 17.113401560521112
 
 Thus, the locally weighted regression has a slightly higher mse than random forest, but is overall close. The mse can be improved by fine-tuning the hyperparameters (f and iter).
@@ -172,7 +172,7 @@ print('The Cross-validated Mean Squared Error for Random Forest is : '+str(np.me
 
 Running this code yields the approximate results:
 
-The Cross-validated Mean Squared Error for Locally Weighted Regression is : 45.948580062873056
+The Cross-validated Mean Squared Error for Locally Weighted Regression is : 45.948580062873056 \
 The Cross-validated Mean Squared Error for Random Forest is : 45.4781508788599
 
 Here, the mses are higher than with the previous dataset, but the locally weighted regression method is much closer in mse to the random forest regressor.
