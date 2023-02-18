@@ -85,11 +85,49 @@ def lw_ag_md(x, y, xnew, f=2/3, iter=3, intercept=True):
     output[np.isnan(output)] = g(xnew[np.isnan(output)])
   return output
 ```
+## KFold Cross-Validations
+
+To test the above function, we'll run some KFold cross-validations with real data.
+
+Import statements:
 
 ```Python
-
+from sklearn.model_selection import train_test_split as tts, KFold
+from sklearn.metrics import mean_squared_error as mse
+from sklearn.preprocessing import StandardScaler
 ```
+
+### Car data
 
 ```Python
+data = pd.read_csv('drive/MyDrive/DATA441/data/cars.csv')
 
+x = data.loc[:,'CYL':'WGT'].values
+y = data['MPG'].values
+
+mse_lwr = []
+mse_rf = []
+kf = KFold(n_splits=10,shuffle=True,random_state=1234)
+model_rf = RandomForestRegressor(n_estimators=200,max_depth=5)
+# model_lw = lw_ag_md(f=1/3,iter=1,intercept=True) #(x, y, xnew, f=2/3, iter=3, intercept=True)
+
+for idxtrain, idxtest in kf.split(x):
+  xtrain = x[idxtrain]
+  ytrain = y[idxtrain]
+  ytest = y[idxtest]
+  xtest = x[idxtest]
+  xtrain = scale.fit_transform(xtrain)
+  xtest = scale.transform(xtest)
+
+  yhat_lw = lw_ag_md(xtrain, ytrain, xtest, f=1/3,iter=1,intercept=True)
+  
+  model_rf.fit(xtrain,ytrain)
+  yhat_rf = model_rf.predict(xtest)
+
+  mse_lwr.append(mse(ytest,yhat_lw))
+  mse_rf.append(mse(ytest,yhat_rf))
+print('The Cross-validated Mean Squared Error for Locally Weighted Regression is : '+str(np.mean(mse_lwr)))
+print('The Cross-validated Mean Squared Error for Random Forest is : '+str(np.mean(mse_rf)))
 ```
+
+### Concrete data
