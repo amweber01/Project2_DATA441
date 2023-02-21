@@ -53,7 +53,7 @@ def lw_ag_md(x, y, xnew, f=2/3, iter=3, intercept=True):
   delta = np.ones(n)
   for iteration in range(iter):
     for i in range(n):
-      W = np.diag(w[:,i])
+      W = np.diag(delta).dot(np.diag(w[i,:]))
       b = np.transpose(x1).dot(W).dot(y)
       A = np.transpose(x1).dot(W).dot(x1)
       ##
@@ -61,7 +61,7 @@ def lw_ag_md(x, y, xnew, f=2/3, iter=3, intercept=True):
       beta = linalg.solve(A, b)
       yest[i] = np.dot(x1[i],beta)
 
-    residuals = y - yest
+    residuals = y.ravel() - yest
     s = np.median(np.abs(residuals))
     delta = np.clip(residuals / (6.0 * s), -1, 1)
     delta = (1 - delta ** 2) ** 2
