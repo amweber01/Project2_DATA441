@@ -73,7 +73,7 @@ def lw_ag_md(x, y, xnew, f=2/3, iter=3, intercept=True):
     output = np.zeros(len(xnew))
     for i in range(len(xnew)):
       ind = np.argsort(np.sqrt(np.sum((x-xnew[i])**2,axis=1)))[:r]
-      pca = PCA(n_components=3)
+      pca = PCA(n_components=2)
       x_pca = pca.fit_transform(x[ind])
       tri = Delaunay(x_pca,qhull_options='QJ')
       f = LinearNDInterpolator(tri,y[ind])
@@ -132,7 +132,7 @@ print('The Cross-validated Mean Squared Error for Random Forest is : '+str(np.me
 ```
 Running this code yields the approximate results:
 
-The Cross-validated Mean Squared Error for Locally Weighted Regression is : 24.45322253639544 \
+The Cross-validated Mean Squared Error for Locally Weighted Regression is : 21.731641567699477 \
 The Cross-validated Mean Squared Error for Random Forest is : 17.113401560521112
 
 Thus, the locally weighted regression has a slightly higher mse than random forest, but is overall close. The mse can be improved by fine-tuning the hyperparameters (f and iter), which we do in the Optimizing Hyperparameters section below by using a grid search.
