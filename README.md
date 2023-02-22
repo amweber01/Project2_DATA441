@@ -1,6 +1,6 @@
 # Project 2: Gramfort's Lowess
 
-Gramfort's approach to Lowess uses a fraction of the input data to determine the neighborhood for the locally weighted regression to use in calculating the local linear regression. This method also eliminates outliers that may be skewing the local linear regressions for a robust approach.
+Gramfort's approach to Lowess uses a fraction of the input data to determine the neighborhood for the locally weighted regression to use in calculating the local linear regression. This method also eliminates outliers that may be skewing the local linear regressions for a robust approach. The only downside to his original approach is that it does not allow multidimensional input data. Thus, we rework his original function below so we can use it with data that has multiple features.
 
 ## Gramfort's Approach with Train and Test Sets
 
